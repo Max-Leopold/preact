@@ -120,35 +120,39 @@ export function getDomSibling(vnode, childIndex) {
  * @param {Component} component The component to rerender
  */
 function renderComponent(component) {
-	let oldVNode = component._vnode,
-		oldDom = oldVNode._dom,
+	let vnode = component._vnode,
+		oldDom = vnode._dom,
 		parentDom = component._parentDom;
 
 	if (parentDom) {
 		let commitQueue = [],
 			refQueue = [];
+		const oldVNode = assign({}, vnode);
+		oldVNode._original = vnode._original + 1;
 
-		const newVNode = assign({}, oldVNode);
-		newVNode._original = oldVNode._original + 1;
+		if (oldVNode._children) {
+			oldVNode._children.forEach(child => {
+				if (child) child._parent = oldVNode;
+			});
+		}
 
 		diff(
 			parentDom,
-			newVNode,
+			vnode,
 			oldVNode,
 			component._globalContext,
 			parentDom.ownerSVGElement !== undefined,
-			oldVNode._hydrating != null ? [oldDom] : null,
+			vnode._hydrating != null ? [oldDom] : null,
 			commitQueue,
-			oldDom == null ? getDomSibling(oldVNode) : oldDom,
-			oldVNode._hydrating,
+			oldDom == null ? getDomSibling(vnode) : oldDom,
+			vnode._hydrating,
 			refQueue
 		);
 
-		newVNode._parent._children[newVNode._index] = newVNode;
-		commitRoot(commitQueue, newVNode, refQueue);
+		commitRoot(commitQueue, vnode, refQueue);
 
-		if (newVNode._dom != oldDom) {
-			updateParentDomPointers(newVNode);
+		if (vnode._dom != oldDom) {
+			updateParentDomPointers(vnode);
 		}
 	}
 }
