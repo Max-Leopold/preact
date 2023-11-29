@@ -149,10 +149,10 @@ function renderComponent(component) {
 			refQueue
 		);
 
-		commitRoot(commitQueue, vnode, refQueue);
+		commitRoot(commitQueue, oldVNode, refQueue);
 
-		if (vnode._dom != oldDom) {
-			updateParentDomPointers(vnode);
+		if (oldVNode._dom != oldDom) {
+			updateParentDomPointers(oldVNode);
 		}
 	}
 }
