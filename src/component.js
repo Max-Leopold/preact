@@ -138,8 +138,8 @@ function renderComponent(component) {
 
 		diff(
 			parentDom,
-			newVNode,
 			oldVNode,
+			newVNode,
 			component._globalContext,
 			parentDom.ownerSVGElement !== undefined,
 			oldVNode._hydrating != null ? [oldDom] : null,
@@ -149,11 +149,10 @@ function renderComponent(component) {
 			refQueue
 		);
 
-		newVNode._parent._children[newVNode._index] = newVNode;
-		commitRoot(commitQueue, newVNode, refQueue);
+		commitRoot(commitQueue, oldVNode, refQueue);
 
-		if (newVNode._dom != oldDom) {
-			updateParentDomPointers(newVNode);
+		if (oldVNode._dom != oldDom) {
+			updateParentDomPointers(oldVNode);
 		}
 	}
 }
