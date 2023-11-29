@@ -121,41 +121,39 @@ export function getDomSibling(vnode, childIndex) {
  * @param {Component} component The component to rerender
  */
 function renderComponent(component) {
-	let oldVNode = component._vnode,
-		oldDom = oldVNode._dom,
-		parentDom = component._parentDom,
-		commitQueue = [],
-		refQueue = [];
+	let vnode = component._vnode,
+		oldDom = vnode._dom,
+		parentDom = component._parentDom;
 
 	if (parentDom) {
-		const newVNode = assign({}, oldVNode);
-		newVNode._original = oldVNode._original + 1;
-		if (options.vnode) options.vnode(newVNode);
+		let commitQueue = [],
+			refQueue = [];
+		const oldVNode = assign({}, vnode);
+		oldVNode._original = vnode._original + 1;
 
-		if (newVNode._children) {
-			newVNode._children.forEach(child => {
-				if (child) child._parent = newVNode;
+		if (oldVNode._children) {
+			oldVNode._children.forEach(child => {
+				if (child) child._parent = oldVNode;
 			});
 		}
 
 		diff(
 			parentDom,
+			vnode,
 			oldVNode,
-			newVNode,
 			component._globalContext,
 			parentDom.ownerSVGElement !== undefined,
-			oldVNode._flags & MODE_HYDRATE ? [oldDom] : null,
+			vnode._flags & MODE_HYDRATE ? [oldDom] : null,
 			commitQueue,
-			oldDom == null ? getDomSibling(oldVNode) : oldDom,
-			!!(oldVNode._flags & MODE_HYDRATE),
+			oldDom == null ? getDomSibling(vnode) : oldDom,
+			!!(vnode._flags & MODE_HYDRATE),
 			refQueue
 		);
 
-		newVNode._parent._children[newVNode._index] = newVNode;
-		commitRoot(commitQueue, newVNode, refQueue);
+		commitRoot(commitQueue, vnode, refQueue);
 
-		if (newVNode._dom != oldDom) {
-			updateParentDomPointers(newVNode);
+		if (vnode._dom != oldDom) {
+			updateParentDomPointers(vnode);
 		}
 	}
 }
