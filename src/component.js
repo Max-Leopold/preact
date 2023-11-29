@@ -140,8 +140,8 @@ function renderComponent(component) {
 
 		diff(
 			parentDom,
-			newVNode,
 			oldVNode,
+			newVNode,
 			component._globalContext,
 			parentDom.ownerSVGElement !== undefined,
 			oldVNode._flags & MODE_HYDRATE ? [oldDom] : null,
