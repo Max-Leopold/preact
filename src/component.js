@@ -120,15 +120,15 @@ export function getDomSibling(vnode, childIndex) {
  * @param {Component} component The component to rerender
  */
 function renderComponent(component) {
-	let vnode = component._vnode,
-		oldDom = vnode._dom,
+	let oldVNode = component._vnode,
+		oldDom = oldVNode._dom,
 		parentDom = component._parentDom;
 
 	if (parentDom) {
 		let commitQueue = [],
 			refQueue = [];
-		const newVNode = assign({}, vnode);
-		newVNode._original = vnode._original + 1;
+		const newVNode = assign({}, oldVNode);
+		newVNode._original = oldVNode._original + 1;
 
 		if (newVNode._children) {
 			newVNode._children.forEach(child => {
@@ -138,14 +138,14 @@ function renderComponent(component) {
 
 		diff(
 			parentDom,
-			vnode,
+			oldVNode,
 			newVNode,
 			component._globalContext,
 			parentDom.ownerSVGElement !== undefined,
-			vnode._hydrating != null ? [oldDom] : null,
+			oldVNode._hydrating != null ? [oldDom] : null,
 			commitQueue,
-			oldDom == null ? getDomSibling(vnode) : oldDom,
-			vnode._hydrating,
+			oldDom == null ? getDomSibling(oldVNode) : oldDom,
+			oldVNode._hydrating,
 			refQueue
 		);
 
