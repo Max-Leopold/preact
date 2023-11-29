@@ -132,6 +132,12 @@ function renderComponent(component) {
 		newVNode._original = oldVNode._original + 1;
 		if (options.vnode) options.vnode(newVNode);
 
+		if (newVNode._children) {
+			newVNode._children.forEach(child => {
+				if (child) child._parent = newVNode;
+			});
+		}
+
 		diff(
 			parentDom,
 			newVNode,
