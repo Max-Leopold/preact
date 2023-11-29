@@ -127,19 +127,19 @@ function renderComponent(component) {
 	if (parentDom) {
 		let commitQueue = [],
 			refQueue = [];
-		const oldVNode = assign({}, vnode);
-		oldVNode._original = vnode._original + 1;
+		const newVNode = assign({}, vnode);
+		newVNode._original = vnode._original + 1;
 
-		if (oldVNode._children) {
-			oldVNode._children.forEach(child => {
-				if (child) child._parent = oldVNode;
+		if (newVNode._children) {
+			newVNode._children.forEach(child => {
+				if (child) child._parent = newVNode;
 			});
 		}
 
 		diff(
 			parentDom,
 			vnode,
-			oldVNode,
+			newVNode,
 			component._globalContext,
 			parentDom.ownerSVGElement !== undefined,
 			vnode._hydrating != null ? [oldDom] : null,
