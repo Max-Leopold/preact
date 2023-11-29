@@ -149,10 +149,11 @@ function renderComponent(component) {
 			refQueue
 		);
 
-		commitRoot(commitQueue, oldVNode, refQueue);
+		newVNode._parent._children[newVNode._index] = newVNode;
+		commitRoot(commitQueue, newVNode, refQueue);
 
-		if (oldVNode._dom != oldDom) {
-			updateParentDomPointers(oldVNode);
+		if (newVNode._dom != oldDom) {
+			updateParentDomPointers(newVNode);
 		}
 	}
 }
