@@ -130,11 +130,11 @@ function renderComponent(component) {
 		const oldVNode = assign({}, vnode);
 		oldVNode._original = vnode._original + 1;
 
-		if (oldVNode._children) {
-			oldVNode._children.forEach(child => {
-				if (child) child._parent = oldVNode;
-			});
-		}
+		// if (oldVNode._children) {
+		// 	oldVNode._children.forEach(child => {
+		// 		if (child) child._parent = oldVNode;
+		// 	});
+		// }
 
 		diff(
 			parentDom,
