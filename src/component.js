@@ -145,12 +145,30 @@ function renderComponent(component) {
 			refQueue
 		);
 
+		printObject(oldVNode);
+		printObject(newVNode);
+
 		newVNode._parent._children[newVNode._index] = newVNode;
 		commitRoot(commitQueue, newVNode, refQueue);
 
 		if (newVNode._dom != oldDom) {
 			updateParentDomPointers(newVNode);
 		}
+	}
+}
+
+function printObject(obj, indentLevel = 0) {
+	const indent = " ".repeat(indentLevel * 2); // Create indentation
+
+	for (const key in obj) {
+			if (obj.hasOwnProperty(key)) {
+					if (typeof obj[key] === 'object' && obj[key] !== null) {
+							console.log(`${indent}${key}:`);
+							printObject(obj[key], indentLevel + 1);
+					} else {
+							console.log(`${indent}${key}: ${obj[key]}`);
+					}
+			}
 	}
 }
 
