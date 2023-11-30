@@ -151,7 +151,7 @@ function renderComponent(component) {
 			refQueue
 		);
 
-		newVNode._parent._children[newVNode._index] = newVNode;
+		// newVNode._parent._children[newVNode._index] = newVNode;
 		commitRoot(commitQueue, oldVNode, refQueue);
 
 		if (oldVNode._dom != oldDom) {
