@@ -121,16 +121,21 @@ export function getDomSibling(vnode, childIndex) {
  * @param {Component} component The component to rerender
  */
 function renderComponent(component) {
-	let oldVNode = component._vnode,
-		oldDom = oldVNode._dom,
+	let newVNode = component._vnode,
+		oldDom = newVNode._dom,
 		parentDom = component._parentDom,
 		commitQueue = [],
 		refQueue = [];
 
 	if (parentDom) {
-		const newVNode = assign({}, oldVNode);
+		const oldVNode = assign({}, newVNode);
 		newVNode._original = oldVNode._original + 1;
-		if (options.vnode) options.vnode(newVNode);
+
+		if (oldVNode._children) {
+			oldVNode._children.forEach(child => {
+				if (child) child._parent = oldVNode;
+			});
+		}
 
 		diff(
 			parentDom,
@@ -145,7 +150,6 @@ function renderComponent(component) {
 			refQueue
 		);
 
-		newVNode._parent._children[newVNode._index] = newVNode;
 		commitRoot(commitQueue, newVNode, refQueue);
 
 		if (newVNode._dom != oldDom) {
